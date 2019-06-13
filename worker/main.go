@@ -47,21 +47,21 @@ func incrementWorker(queue string, args ...interface{}) error {
 	signal.Notify(osSignalCh, syscall.SIGHUP, syscall.SIGINT, syscall.SIGTERM, syscall.SIGQUIT)
 	defer signal.Stop(osSignalCh)
 
-	jsonNumber, ok := args[0].(json.Number)
+	jsonCount, ok := args[0].(json.Number)
 	if !ok {
-		log.Println("invalid parameter: number")
-		return errors.New("invalid parameter: number")
+		log.Println("invalid parameter: count")
+		return errors.New("invalid parameter: count")
 	}
-	int64Number, err := jsonNumber.Int64()
+	int64Count, err := jsonCount.Int64()
 	if err != nil {
 		return err
 	}
-	number := (int)(int64Number)
-	log.Println("start increment task: number = ", number)
+	count := (int)(int64Count)
+	log.Println("start increment task: count = ", count)
 
 	done := make(chan error)
 	go func() {
-		err := incrementWithRecover(&number)
+		err := incrementWithRecover(&count)
 		done <- err
 	}()
 
@@ -71,12 +71,12 @@ func incrementWorker(queue string, args ...interface{}) error {
 			switch killSignal {
 			case syscall.SIGHUP, syscall.SIGINT, syscall.SIGTERM, syscall.SIGQUIT:
 				// Requeue
-				log.Println("Requeue the task: number=", number)
+				log.Println("Requeue the task: count=", count)
 				if err := goworker.Enqueue(&goworker.Job{
 					Queue: "increment",
 					Payload: goworker.Payload{
 						Class: "Increment",
-						Args:  []interface{}{number},
+						Args:  []interface{}{count},
 					},
 				}); err != nil {
 					log.Println("enqueue failed: ", err)
@@ -90,7 +90,7 @@ func incrementWorker(queue string, args ...interface{}) error {
 	}
 }
 
-func incrementWithRecover(number *int) (e error) {
+func incrementWithRecover(count *int) (e error) {
 
 	defer func() {
 		if err := recover(); err != nil {
@@ -101,8 +101,8 @@ func incrementWithRecover(number *int) (e error) {
 	}()
 
 	for {
-		log.Println("number: ", *number)
-		*number++
+		log.Println("count: ", *count)
+		*count++
 		time.Sleep(time.Second)
 	}
 }

@@ -19,14 +19,14 @@ func main(){
 		IntervalFloat:  1.0,
 	}
 	goworker.SetSettings(workerSettings)
-	const number = 0
+	const count = 0
 	time.Sleep(5*time.Second)
-	log.Println("enqueue the task: number=", number)
+	log.Println("enqueue the task: number=", count)
 	if err := goworker.Enqueue(&goworker.Job{
 		Queue: "increment",
 		Payload: goworker.Payload{
 			Class: "Increment",
-			Args:  []interface{}{number},
+			Args:  []interface{}{count},
 		},
 	}); err != nil {
 		log.Println("enqueue failed: ", err)
