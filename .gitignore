@@ -9,5 +9,7 @@
 # Test binary, build with `go test -c`
 *.test
 
-# Built binary
-ctr
+# go modules file on root directory
+go.mod
+go.sum
+
