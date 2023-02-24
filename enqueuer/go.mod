@@ -8,5 +8,5 @@ require (
 	github.com/garyburd/redigo v1.6.0 // indirect
 	github.com/golang/glog v0.0.0-20160126235308-23def4e6c14b // indirect
 	github.com/youtube/vitess v2.1.1+incompatible // indirect
-	golang.org/x/net v0.0.0-20190611141213-3f473d35a33a // indirect
+	golang.org/x/net v0.7.0 // indirect
 )
